@@ -1,9 +1,7 @@
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
 import { z } from "zod";
+import { prisma } from "@/lib/prisma";
 import { studentSchema } from "@/lib/studentSchema";
-
-const prisma = new PrismaClient();
 
 // 1. ดึงข้อมูลนักศึกษารายคน (GET)
 export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {

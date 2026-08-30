@@ -1,9 +1,8 @@
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
 import { z } from "zod";
+import { prisma } from "@/lib/prisma";
 import { studentSchema } from "@/lib/studentSchema";
 
-const prisma = new PrismaClient();
 export async function GET() {
   try {
     const students = await prisma.student.findMany({ 
