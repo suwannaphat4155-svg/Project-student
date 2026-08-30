@@ -105,10 +105,10 @@ export default function StudentList() {
           <p className="mt-1 font-medium text-pink-600">พบข้อมูลทั้งหมด {filteredStudents.length} รายการ</p>
         </div>
         <div className="flex gap-3">
-          <button onClick={exportToCsv} className="rounded-full bg-white border border-pink-200 px-4 py-2 font-semibold text-pink-700 hover:bg-pink-50 transition">
+          <button onClick={exportToCsv} className="rounded-full bg-white border border-pink-200 px-4 py-2 font-semibold text-pink-700 hover:bg-pink-50 transition shadow-sm">
             Export CSV
           </button>
-          <Link href="/add" className="rounded-full bg-pink-500 px-4 py-2 font-semibold text-white hover:bg-pink-600 transition">
+          <Link href="/add" className="rounded-full bg-gradient-to-r from-pink-500 to-rose-500 px-4 py-2 font-semibold text-white hover:brightness-105 transition shadow-lg shadow-pink-200">
             + เพิ่มข้อมูล
           </Link>
         </div>
