@@ -1,23 +1,35 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f5f0ff;
-  --foreground: #2a0b58;
-  --surface: #f3e8ff;
-  --surface-strong: #e9d5ff;
-  --primary: #8b5cf6;
-  --primary-dark: #7c3aed;
-  --border: #c4b5fd;
+  --background: #fff7fb;
+  --foreground: #43162d;
+  --surface: #fff1f7;
+  --surface-strong: #ffe3ef;
+  --primary: #ec4899;
+  --primary-dark: #be185d;
+  --border: #f9a8d4;
+  --pink-soft: #fdf2f8;
+  --pink-strong: #db2777;
 }
 
 .dark {
-  --background: #1a1a1a;
-  --foreground: #ededed;
+  --background: #1f0d1a;
+  --foreground: #fce7f3;
+  --surface: #2b1223;
+  --surface-strong: #3a1830;
+  --primary: #f9a8d4;
+  --primary-dark: #f472b6;
+  --border: #9d174d;
 }
 
 .light {
-  --background: #f5f0ff;
-  --foreground: #2a0b58;
+  --background: #fff7fb;
+  --foreground: #43162d;
+  --surface: #fff1f7;
+  --surface-strong: #ffe3ef;
+  --primary: #ec4899;
+  --primary-dark: #be185d;
+  --border: #f9a8d4;
 }
 
 @theme inline {
@@ -27,23 +39,20 @@
   --font-mono: var(--font-geist-mono);
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+button,
+input,
+select {
+  font: inherit;
 }
 
 @keyframes fadeIn {
@@ -98,6 +107,17 @@ body {
   }
 }
 
+@keyframes toastIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 .animate-fade-in {
   animation: fadeIn 0.5s ease-out;
 }
@@ -116,4 +136,28 @@ body {
 
 .animate-shake {
   animation: shake 0.5s ease-in-out;
+}
+
+.animate-toast-in {
+  animation: toastIn 0.25s ease-out;
+}
+
+.gradient-pink {
+  background: linear-gradient(135deg, #fdf2f8, #fce7f3, #fbcfe8);
+}
+
+.pink-panel {
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(244, 114, 182, 0.25);
+  backdrop-filter: blur(10px);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(249, 168, 212, 0.7);
+  box-shadow: 0 18px 40px rgba(236, 72, 153, 0.12);
+}
+
+.toast-shadow {
+  box-shadow: 0 18px 40px rgba(219, 39, 119, 0.2);
 }

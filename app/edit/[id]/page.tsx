@@ -2,11 +2,13 @@
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { studentSchema } from "@/lib/studentSchema";
+import { useToast } from "../../components/Toast";
 
 export default function EditStudent() {
   const router = useRouter();
   const params = useParams();
   const id = params.id;
+  const { showToast } = useToast();
 
   const [formData, setFormData] = useState({ studentId: "", name: "", gpa: "", image: "" });
   const [error, setError] = useState("");
@@ -27,7 +29,6 @@ export default function EditStudent() {
     }
   };
 
-  // ดึงข้อมูลเดิมมาแสดงในฟอร์ม
   useEffect(() => {
     if (!id) return;
     fetch(`/api/students/${id}`)
@@ -58,7 +59,9 @@ export default function EditStudent() {
     });
 
     if (!result.success) {
-      setError(result.error.issues[0]?.message || "ข้อมูลไม่ถูกต้อง");
+      const message = result.error.issues[0]?.message || "ข้อมูลไม่ถูกต้อง";
+      setError(message);
+      showToast(message, "error");
       return;
     }
 
@@ -75,91 +78,83 @@ export default function EditStudent() {
       const data = await res.json();
 
       if (res.ok) {
-        alert("แก้ไขข้อมูลสำเร็จ!");
+        showToast("แก้ไขข้อมูลสำเร็จ", "success");
         router.push("/students");
       } else {
-        setError(data.error || "เกิดข้อผิดพลาด");
+        const message = data.error || "เกิดข้อผิดพลาด";
+        setError(message);
+        showToast(message, "error");
       }
     } catch (err) {
-      setError("ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้");
+      const message = "ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้";
+      setError(message);
+      showToast(message, "error");
     } finally {
       setIsLoading(false);
     }
   };
 
-  if (isFetching) return <div className="text-center mt-20 font-bold text-[#7c3aed] animate-pulse">กำลังโหลดข้อมูล...</div>;
+  if (isFetching) return <div className="mt-20 text-center font-black text-pink-600 animate-pulse">กำลังโหลดข้อมูล...</div>;
 
   return (
-    <div className="max-w-md mx-auto bg-[#f5f0ff] p-8 rounded-3xl shadow-xl border border-[#e9d5ff] mt-10 relative">
-      <h2 className="text-3xl font-extrabold text-[#5b21b6] mb-8 text-center">แก้ไขข้อมูล</h2>
-      
+    <div className="mx-auto mt-10 max-w-lg rounded-[32px] border border-pink-200 bg-white/70 p-8 shadow-[0_24px_60px_rgba(236,72,153,0.12)] backdrop-blur-sm animate-fade-in">
+      <h2 className="mb-8 text-center text-3xl font-black text-pink-700">แก้ไขข้อมูล</h2>
+
       {error && (
-        <div className="bg-[#f8d5ff] text-[#6d28d9] p-4 rounded-2xl mb-6 text-sm font-bold text-center border border-[#d8b4fe]">
+        <div className="mb-6 rounded-2xl border border-pink-200 bg-pink-50 p-4 text-center text-sm font-bold text-pink-700">
           * {error}
         </div>
       )}
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-5">
         <div>
-          <label className="text-sm font-bold text-[#ff6fa5] ml-2">รหัสนักศึกษา (10 หลัก)</label>
-          <input 
-            type="text" 
+          <label className="ml-2 text-sm font-bold text-pink-600">รหัสนักศึกษา (10 หลัก)</label>
+          <input
+            type="text"
             maxLength={10}
-            className="w-full p-4 bg-white rounded-2xl mt-1 outline-none focus:ring-2 focus:ring-[#ff6fa5] transition-all border border-[#ffd6e7]" 
-            value={formData.studentId} 
-            onChange={(e) => setFormData({...formData, studentId: e.target.value.replace(/\D/g, "")})} 
-          />
-        </div>
-        
-        <div>
-          <label className="text-sm font-bold text-[#ff6fa5] ml-2">ชื่อ-นามสกุล</label>
-          <input 
-            type="text" 
-            className="w-full p-4 bg-white rounded-2xl mt-1 outline-none focus:ring-2 focus:ring-[#ff6fa5] transition-all border border-[#ffd6e7]" 
-            value={formData.name} 
-            onChange={(e) => setFormData({...formData, name: e.target.value})} 
+            className="mt-1 w-full rounded-2xl border border-pink-200 bg-white p-4 text-pink-700 outline-none transition focus:ring-2 focus:ring-pink-300"
+            value={formData.studentId}
+            onChange={(e) => setFormData({ ...formData, studentId: e.target.value.replace(/\D/g, "") })}
           />
         </div>
 
         <div>
-          <label className="text-sm font-bold text-[#ff6fa5] ml-2">เกรดเฉลี่ย (GPA)</label>
-          <input 
-            type="number" 
-            step="0.01" 
-            className="w-full p-4 bg-white rounded-2xl mt-1 outline-none focus:ring-2 focus:ring-[#ff6fa5] transition-all border border-[#ffd6e7]" 
-            value={formData.gpa} 
-            onChange={(e) => setFormData({...formData, gpa: e.target.value})} 
+          <label className="ml-2 text-sm font-bold text-pink-600">ชื่อ-นามสกุล</label>
+          <input
+            type="text"
+            className="mt-1 w-full rounded-2xl border border-pink-200 bg-white p-4 text-pink-700 outline-none transition focus:ring-2 focus:ring-pink-300"
+            value={formData.name}
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
           />
         </div>
 
         <div>
-          <label className="text-sm font-bold text-[#ff6fa5] ml-2">รูปโปรไฟล์ (ไม่บังคับ)</label>
-          <input 
-            type="file" 
+          <label className="ml-2 text-sm font-bold text-pink-600">เกรดเฉลี่ย (GPA)</label>
+          <input
+            type="number"
+            step="0.01"
+            className="mt-1 w-full rounded-2xl border border-pink-200 bg-white p-4 text-pink-700 outline-none transition focus:ring-2 focus:ring-pink-300"
+            value={formData.gpa}
+            onChange={(e) => setFormData({ ...formData, gpa: e.target.value })}
+          />
+        </div>
+
+        <div>
+          <label className="ml-2 text-sm font-bold text-pink-600">รูปโปรไฟล์ (ไม่บังคับ)</label>
+          <input
+            type="file"
             accept="image/*"
             onChange={handleImageChange}
-            className="w-full p-4 bg-white rounded-2xl mt-1 outline-none focus:ring-2 focus:ring-[#8b5cf6] transition-all border border-[#d8b4fe]" 
+            className="mt-1 w-full rounded-2xl border border-pink-200 bg-white p-4 text-pink-700 outline-none transition focus:ring-2 focus:ring-pink-300"
           />
-          {imagePreview && (
-            <img src={imagePreview} alt="Preview" className="mt-2 w-20 h-20 object-cover rounded-full border-2 border-[#7c3aed]" />
-          )}
+          {imagePreview && <img src={imagePreview} alt="Preview" className="mt-3 h-20 w-20 rounded-full border-2 border-pink-300 object-cover" />}
         </div>
 
-        <div className="flex gap-3 mt-6">
-          <button 
-            type="button" 
-            onClick={() => router.push("/students")}
-            className="flex-1 bg-[#ede9fe] text-[#5b21b6] font-bold py-4 rounded-2xl hover:bg-[#d8b4fe] hover:text-[#3b076b] transition-all border border-[#c4b5fd]"
-          >
+        <div className="mt-6 flex gap-3">
+          <button type="button" onClick={() => router.push("/students")} className="flex-1 rounded-2xl border border-pink-200 bg-pink-50 py-4 font-bold text-pink-700 transition hover:bg-pink-100">
             ยกเลิก
           </button>
-          <button 
-            type="submit" 
-            disabled={isLoading}
-            className={`flex-1 text-white font-bold py-4 rounded-2xl shadow-lg transition-all ${
-              isLoading ? "bg-[#7c3aed]" : "bg-[#8b5cf6] hover:bg-[#7c3aed] active:scale-[0.98]"
-            }`}
-          >
+          <button type="submit" disabled={isLoading} className={`flex-1 rounded-2xl py-4 font-bold text-white shadow-lg transition ${isLoading ? "bg-pink-400" : "bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600"}`}>
             {isLoading ? "กำลังบันทึก..." : "อัปเดตข้อมูล"}
           </button>
         </div>
